@@ -81,7 +81,7 @@ def summarize_video():
         return jsonify({"error": "Error summarizing transcript"}), 500
     
     # ✅ Save in Firebase Firestore
-    save_summary(video_id, summary)
+    #save_summary(video_id, summary)
 
     return jsonify({"video_id": video_id, "summary": summary})
 

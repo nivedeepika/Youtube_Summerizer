@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Video Summarizer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+        }
+        input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #summary {
+            margin-top: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>YouTube Video Summarizer</h1>
+    <input type="text" id="video_url" placeholder="Enter YouTube Video URL">
+    <button onclick="summarizeVideo()">Summarize</button>
+
+    <h2>Summary:</h2>
+    <div id="summary">Your summary will appear here...</div>
+
+    <script>
+        function summarizeVideo() {
+            let videoUrl = document.getElementById("video_url").value;
+            if (!videoUrl) {
+                alert("Please enter a YouTube video URL!");
+                return;
+            }
+
+            document.getElementById("summary").innerText = "Processing... Please wait...";
+
+            fetch("http://127.0.0.1:5000/summarize", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ video_url: videoUrl })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.summary) {
+                    document.getElementById("summary").innerText = data.summary;
+                } else {
+                    document.getElementById("summary").innerText = "Error: " + data.error;
+                }
+            })
+            .catch(error => {
+                document.getElementById("summary").innerText = "Error fetching summary!";
+                console.error("Error:", error);
+            });
+        }
+    </script>
+
+</body>
+</html>
